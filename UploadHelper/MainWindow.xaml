@@ -39,6 +39,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Button Name="DeleteSelectedButton" Click="DeleteSelectedButton_Click" Grid.Column="0" Margin="2,2,1,2" Height="30" Padding="10,2">
                     <StackPanel Orientation="Horizontal">
@@ -46,10 +47,16 @@
                         <TextBlock Text="선택 삭제"/>
                     </StackPanel>
                 </Button>
-                <Button Name="DeleteAllButton" Click="DeleteAllButton_Click" Grid.Column="1" Margin="1,2,2,2" Height="30" Padding="10,2">
+                <Button Name="DeleteAllButton" Click="DeleteAllButton_Click" Grid.Column="1" Margin="1,2,1,2" Height="30" Padding="10,2">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="🗑" Margin="0,0,5,0"/>
                         <TextBlock Text="전체 삭제"/>
+                    </StackPanel>
+                </Button>
+                <Button Name="SortButton" Click="SortButton_Click" Grid.Column="2" Margin="1,2,2,2" Height="30" Padding="10,2">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="↕" Margin="0,0,5,0"/>
+                        <TextBlock Text="정렬"/>
                     </StackPanel>
                 </Button>
             </Grid>
@@ -66,6 +73,18 @@
                  AllowDrop="True"
                  Drop="FileListBox_Drop"
                  DragEnter="FileListBox_DragEnter"
-                 Margin="10"/>
+                 Margin="10">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding FileName}" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding FileSize, StringFormat=' ({0:N1} KB)'}" 
+                                 Foreground="Gray" 
+                                 VerticalAlignment="Center"
+                                 Margin="5,0,0,0"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
     </DockPanel>
 </Window> 

@@ -4,132 +4,111 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.IO;
+using System;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace UploadHelperWpf
 {
     public partial class MainWindow : Window
     {
         private readonly string tempFolder;
-        private bool isDraggingOut = false;
+        private ObservableCollection<FileItem> fileItems;
+        private bool isAscending = true;
 
         public MainWindow()
         {
             InitializeComponent();
             tempFolder = Path.Combine(Path.GetTempPath(), "UploadHelper");
             Directory.CreateDirectory(tempFolder);
+            fileItems = new ObservableCollection<FileItem>();
+            FileListBox.ItemsSource = fileItems;
         }
 
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog dlg = new OpenFileDialog();
-            dlg.Multiselect = true;
-            if (dlg.ShowDialog() == true)
+            var dialog = new OpenFileDialog
             {
-                foreach (var file in dlg.FileNames)
+                Multiselect = true,
+                Title = "파일 선택"
+            };
+
+            if (dialog.ShowDialog() == true)
+            {
+                foreach (string file in dialog.FileNames)
                 {
-                    if (!FileListBox.Items.Contains(file))
-                        FileListBox.Items.Add(file);
+                    AddFile(file);
                 }
             }
+        }
+
+        private void AddFile(string filePath)
+        {
+            var fileInfo = new FileInfo(filePath);
+            fileItems.Add(new FileItem
+            {
+                FileName = Path.GetFileName(filePath),
+                FilePath = filePath,
+                FileSize = fileInfo.Length / 1024.0 // Convert to KB
+            });
         }
 
         private void FileListBox_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (FileListBox.SelectedItems.Count > 0)
             {
-                try
-                {
-                    isDraggingOut = true;
-                    // 임시 폴더 정리
-                    foreach (var file in Directory.GetFiles(tempFolder))
-                    {
-                        try { File.Delete(file); } catch { }
-                    }
-
-                    // 선택된 파일들을 임시 폴더에 복사
-                    List<string> tempFiles = new List<string>();
-                    foreach (var item in FileListBox.SelectedItems)
-                    {
-                        string originalFile = item.ToString();
-                        string fileName = Path.GetFileName(originalFile);
-                        string tempFile = Path.Combine(tempFolder, fileName);
-                        File.Copy(originalFile, tempFile, true);
-                        tempFiles.Add(tempFile);
-                    }
-
-                    // 임시 파일들을 드래그
-                    DataObject data = new DataObject(DataFormats.FileDrop, tempFiles.ToArray());
-                    DragDrop.DoDragDrop(FileListBox, data, DragDropEffects.Copy);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"파일 처리 중 오류가 발생했습니다: {ex.Message}", "오류", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-                finally
-                {
-                    isDraggingOut = false;
-                }
+                var items = FileListBox.SelectedItems.Cast<FileItem>().Select(x => x.FilePath).ToArray();
+                DragDrop.DoDragDrop(FileListBox, items, DragDropEffects.Copy);
             }
         }
 
         private void FileListBox_DragEnter(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop) && !isDraggingOut)
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 e.Effects = DragDropEffects.Copy;
-            }
-            else
-            {
-                e.Effects = DragDropEffects.None;
             }
         }
 
         private void FileListBox_Drop(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop) && !isDraggingOut)
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
                 foreach (string file in files)
                 {
-                    // 임시 폴더의 파일은 제외
-                    if (File.Exists(file) && !file.StartsWith(tempFolder) && !FileListBox.Items.Contains(file))
-                    {
-                        FileListBox.Items.Add(file);
-                    }
+                    AddFile(file);
                 }
             }
         }
 
         private void DeleteSelectedButton_Click(object sender, RoutedEventArgs e)
         {
-            if (FileListBox.SelectedItems.Count > 0)
+            var selectedItems = FileListBox.SelectedItems.Cast<FileItem>().ToList();
+            foreach (var item in selectedItems)
             {
-                var selectedItems = FileListBox.SelectedItems.Cast<object>().ToList();
-                foreach (var item in selectedItems)
-                {
-                    FileListBox.Items.Remove(item);
-                }
-            }
-            else
-            {
-                MessageBox.Show("삭제할 파일을 선택해주세요.", "알림", MessageBoxButton.OK, MessageBoxImage.Information);
+                fileItems.Remove(item);
             }
         }
 
         private void DeleteAllButton_Click(object sender, RoutedEventArgs e)
         {
-            if (FileListBox.Items.Count > 0)
+            fileItems.Clear();
+        }
+
+        private void SortButton_Click(object sender, RoutedEventArgs e)
+        {
+            var sortedItems = isAscending 
+                ? fileItems.OrderBy(x => x.FileName).ToList()
+                : fileItems.OrderByDescending(x => x.FileName).ToList();
+
+            fileItems.Clear();
+            foreach (var item in sortedItems)
             {
-                var result = MessageBox.Show("모든 파일을 삭제하시겠습니까?", "확인", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                if (result == MessageBoxResult.Yes)
-                {
-                    FileListBox.Items.Clear();
-                }
+                fileItems.Add(item);
             }
-            else
-            {
-                MessageBox.Show("삭제할 파일이 없습니다.", "알림", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
+
+            isAscending = !isAscending;
         }
 
         protected override void OnClosed(EventArgs e)
@@ -149,5 +128,12 @@ namespace UploadHelperWpf
             }
             catch { }
         }
+    }
+
+    public class FileItem
+    {
+        public required string FileName { get; set; }
+        public required string FilePath { get; set; }
+        public double FileSize { get; set; } // Changed to double for decimal KB values
     }
 } 
