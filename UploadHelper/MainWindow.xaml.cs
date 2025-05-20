@@ -13,6 +13,7 @@ namespace UploadHelperWpf
     public partial class MainWindow : Window
     {
         private readonly string tempFolder;
+        private bool isDraggingOut = false;
         private ObservableCollection<FileItem> fileItems;
         private bool isAscending = true;
 
@@ -57,27 +58,65 @@ namespace UploadHelperWpf
         {
             if (FileListBox.SelectedItems.Count > 0)
             {
-                var items = FileListBox.SelectedItems.Cast<FileItem>().Select(x => x.FilePath).ToArray();
-                DragDrop.DoDragDrop(FileListBox, items, DragDropEffects.Copy);
+                try
+                {
+                    isDraggingOut = true;
+                    // 임시 폴더 정리
+                    foreach (var file in Directory.GetFiles(tempFolder))
+                    {
+                        try { File.Delete(file); } catch { }
+                    }
+
+                    // 선택된 파일들을 임시 폴더에 복사
+                    List<string> tempFiles = new List<string>();
+                    foreach (var item in FileListBox.SelectedItems.Cast<FileItem>())
+                    {
+                        string originalFile = item.FilePath;
+                        string fileName = Path.GetFileName(originalFile);
+                        string tempFile = Path.Combine(tempFolder, fileName);
+                        File.Copy(originalFile, tempFile, true);
+                        tempFiles.Add(tempFile);
+                    }
+
+                    // 임시 파일들을 드래그
+                    DataObject data = new DataObject(DataFormats.FileDrop, tempFiles.ToArray());
+                    DragDrop.DoDragDrop(FileListBox, data, DragDropEffects.Copy);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"파일 처리 중 오류가 발생했습니다: {ex.Message}", "오류", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                finally
+                {
+                    isDraggingOut = false;
+                }
             }
         }
 
         private void FileListBox_DragEnter(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            if (e.Data.GetDataPresent(DataFormats.FileDrop) && !isDraggingOut)
             {
                 e.Effects = DragDropEffects.Copy;
+            }
+            else
+            {
+                e.Effects = DragDropEffects.None;
             }
         }
 
         private void FileListBox_Drop(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            if (e.Data.GetDataPresent(DataFormats.FileDrop) && !isDraggingOut)
             {
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
                 foreach (string file in files)
                 {
-                    AddFile(file);
+                    // 임시 폴더의 파일은 제외
+                    if (File.Exists(file) && !file.StartsWith(tempFolder))
+                    {
+                        AddFile(file);
+                    }
                 }
             }
         }
