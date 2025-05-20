@@ -1,32 +1,58 @@
 <Window x:Class="UploadHelperWpf.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:UploadHelperWpf"
         Title="파일 업로드 도우미 (WPF)" Height="400" Width="600"
         Icon="/Resources/app.ico">
     <Window.Resources>
+        <local:EmptyToVisibleConverter x:Key="EmptyToVisibleConverter"/>
         <Style TargetType="Button">
             <Setter Property="Margin" Value="5"/>
             <Setter Property="Padding" Value="10,5"/>
             <Setter Property="FontFamily" Value="Segoe UI Symbol"/>
         </Style>
+        <Style TargetType="ListBox">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBox">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <Grid>
+                                <TextBlock Text="Drag and Drop Here" 
+                                         HorizontalAlignment="Center" 
+                                         VerticalAlignment="Center"
+                                         Foreground="Gray"
+                                         Visibility="{Binding Items.Count, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource EmptyToVisibleConverter}}"/>
+                                <ItemsPresenter/>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
     <DockPanel>
         <StackPanel DockPanel.Dock="Top" Margin="10">
             <TextBlock Text="파일을 리스트에 추가하고, 선택 후 브라우저로 드래그하세요." FontSize="15" Margin="0,0,0,10"/>
-            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                <Button Name="DeleteSelectedButton" Click="DeleteSelectedButton_Click">
+            <Grid Margin="0,0,0,5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button Name="DeleteSelectedButton" Click="DeleteSelectedButton_Click" Grid.Column="0" Margin="2,2,1,2" Height="30" Padding="10,2">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="🗑" Margin="0,0,5,0"/>
                         <TextBlock Text="선택 삭제"/>
                     </StackPanel>
                 </Button>
-                <Button Name="DeleteAllButton" Click="DeleteAllButton_Click">
+                <Button Name="DeleteAllButton" Click="DeleteAllButton_Click" Grid.Column="1" Margin="1,2,2,2" Height="30" Padding="10,2">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="🗑" Margin="0,0,5,0"/>
                         <TextBlock Text="전체 삭제"/>
                     </StackPanel>
                 </Button>
-            </StackPanel>
+            </Grid>
         </StackPanel>
         <Button Name="AddButton" DockPanel.Dock="Bottom" Height="40" Click="AddButton_Click">
             <StackPanel Orientation="Horizontal">
