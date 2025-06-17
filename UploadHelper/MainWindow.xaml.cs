@@ -12,6 +12,7 @@ using System.Windows.Interop;
 using System.Runtime.InteropServices;
 using System.Windows.Media;
 using System.Windows.Markup;
+using System.Windows.Controls.Primitives;
 
 namespace UploadHelper
 {
@@ -142,7 +143,8 @@ namespace UploadHelper
                 FileName = Path.GetFileName(filePath),
                 FilePath = filePath,
                 FileSize = fileInfo.Length / 1024.0, // Convert to KB
-                FileIcon = GetFileIcon(filePath)
+                FileIcon = GetFileIcon(filePath),
+                ModifiedDate = fileInfo.LastWriteTime
             });
         }
 
@@ -311,6 +313,67 @@ namespace UploadHelper
         {
             Close();
         }
+
+        private void ResizeLeft_DragDelta(object sender, DragDeltaEventArgs e)
+        {
+            double newWidth = Width - e.HorizontalChange;
+            double newLeft = Left + e.HorizontalChange;
+            if (newWidth > MinWidth)
+            {
+                Width = newWidth;
+                Left = newLeft;
+            }
+        }
+        private void ResizeRight_DragDelta(object sender, DragDeltaEventArgs e)
+        {
+            double newWidth = Width + e.HorizontalChange;
+            if (newWidth > MinWidth)
+                Width = newWidth;
+        }
+        private void ResizeTop_DragDelta(object sender, DragDeltaEventArgs e)
+        {
+            double newHeight = Height - e.VerticalChange;
+            double newTop = Top + e.VerticalChange;
+            if (newHeight > MinHeight)
+            {
+                Height = newHeight;
+                Top = newTop;
+            }
+        }
+        private void ResizeBottom_DragDelta(object sender, DragDeltaEventArgs e)
+        {
+            double newHeight = Height + e.VerticalChange;
+            if (newHeight > MinHeight)
+                Height = newHeight;
+        }
+        private void ResizeTopLeft_DragDelta(object sender, DragDeltaEventArgs e)
+        {
+            ResizeLeft_DragDelta(sender, e);
+            ResizeTop_DragDelta(sender, e);
+        }
+        private void ResizeTopRight_DragDelta(object sender, DragDeltaEventArgs e)
+        {
+            ResizeRight_DragDelta(sender, e);
+            ResizeTop_DragDelta(sender, e);
+        }
+        private void ResizeBottomLeft_DragDelta(object sender, DragDeltaEventArgs e)
+        {
+            ResizeLeft_DragDelta(sender, e);
+            ResizeBottom_DragDelta(sender, e);
+        }
+        private void ResizeBottomRight_DragDelta(object sender, DragDeltaEventArgs e)
+        {
+            ResizeRight_DragDelta(sender, e);
+            ResizeBottom_DragDelta(sender, e);
+        }
+
+        private void MaximizeButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (WindowState == WindowState.Normal)
+                WindowState = WindowState.Maximized;
+            else if (WindowState == WindowState.Maximized)
+                WindowState = WindowState.Normal;
+        }
     }
 
     public class FileItem
@@ -319,5 +382,6 @@ namespace UploadHelper
         public required string FilePath { get; set; }
         public double FileSize { get; set; }
         public ImageSource? FileIcon { get; set; }
+        public DateTime ModifiedDate { get; set; }
     }
 } 

@@ -7,7 +7,8 @@
         Foreground="{DynamicResource WindowForegroundBrush}"
         Icon="pack://application:,,,/Resources/app.ico"
         AllowsTransparency="True"
-        WindowStyle="None">
+        WindowStyle="None"
+        ResizeMode="CanResize">
     <Window.Resources>
         <local:EmptyToVisibleConverter x:Key="EmptyToVisibleConverter"/>
         <Style TargetType="Button">
@@ -68,124 +69,179 @@
         </Style>
     </Window.Resources>
     <Border Background="{DynamicResource WindowBackgroundBrush}" CornerRadius="8" BorderBrush="{DynamicResource WindowBorderBrush}" BorderThickness="1">
-        <DockPanel>
-            <Grid DockPanel.Dock="Top" MouseLeftButtonDown="Grid_MouseLeftButtonDown">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <Image Source="pack://application:,,,/Resources/app.ico" Width="20" Height="20" Margin="8,0,4,0" VerticalAlignment="Center"/>
-                <TextBlock Grid.Column="1" Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}" 
-                         Margin="0,5" 
-                         VerticalAlignment="Center"/>
-                <StackPanel Grid.Column="2" 
-                          Orientation="Horizontal" 
-                          HorizontalAlignment="Right">
-                    <Button Name="MinimizeButton" 
-                            Click="MinimizeButton_Click"
-                            Width="30" Height="30"
-                            Margin="0">
-                        <TextBlock Text="&#xE921;" 
-                                 FontFamily="Segoe MDL2 Assets" 
-                                 FontSize="10"/>
-                    </Button>
-                    <Button Name="CloseButton" 
-                            Click="CloseButton_Click"
-                            Width="32" Height="32"
-                            Margin="0">
-                        <Button.Style>
-                            <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-                                <Setter Property="Foreground" Value="Red"/>
-                                <Style.Triggers>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Foreground" Value="#B22222"/>
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
-                        <TextBlock Text="&#xE8BB;" 
-                                 FontFamily="Segoe MDL2 Assets" 
-                                 FontSize="14"
-                                 VerticalAlignment="Center"
-                                 HorizontalAlignment="Center"
-                                 Margin="0"
-                                 Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
-                    </Button>
-                </StackPanel>
-            </Grid>
-            <StackPanel DockPanel.Dock="Top" Margin="10">
-                <Grid Margin="0,0,0,5">
+        <Grid>
+            <DockPanel>
+                <Grid DockPanel.Dock="Top" MouseLeftButtonDown="Grid_MouseLeftButtonDown">
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <Grid Grid.Column="0">
+                    <Image Source="pack://application:,,,/Resources/app.ico" Width="20" Height="20" Margin="8,0,4,0" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Column="1" Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}" 
+                             Margin="0,5" 
+                             VerticalAlignment="Center"/>
+                    <StackPanel Grid.Column="2" 
+                              Orientation="Horizontal" 
+                              HorizontalAlignment="Right">
+                        <Button Name="MinimizeButton" 
+                                Click="MinimizeButton_Click"
+                                Width="32" Height="32"
+                                Margin="0">
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                                    <Setter Property="Foreground" Value="#888"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Foreground" Value="#222"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                            <TextBlock Text="&#xE921;" 
+                                     FontFamily="Segoe MDL2 Assets" 
+                                     FontSize="14"
+                                     VerticalAlignment="Center"
+                                     HorizontalAlignment="Center"
+                                     Margin="0"
+                                     Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+                        </Button>
+                        <Button Name="MaximizeButton" 
+                                Click="MaximizeButton_Click"
+                                Width="32" Height="32"
+                                Margin="0">
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                                    <Setter Property="Foreground" Value="#888"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Foreground" Value="#222"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                            <TextBlock Text="&#xE922;" 
+                                     FontFamily="Segoe MDL2 Assets" 
+                                     FontSize="14"
+                                     VerticalAlignment="Center"
+                                     HorizontalAlignment="Center"
+                                     Margin="0"
+                                     Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+                        </Button>
+                        <Button Name="CloseButton" 
+                                Click="CloseButton_Click"
+                                Width="32" Height="32"
+                                Margin="0">
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                                    <Setter Property="Foreground" Value="Red"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Foreground" Value="#B22222"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                            <TextBlock Text="&#xE8BB;" 
+                                     FontFamily="Segoe MDL2 Assets" 
+                                     FontSize="14"
+                                     VerticalAlignment="Center"
+                                     HorizontalAlignment="Center"
+                                     Margin="0"
+                                     Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+                <StackPanel DockPanel.Dock="Top" Margin="10">
+                    <Grid Margin="0,0,0,5">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <Button Name="SelectAllButton" Click="SelectAllButton_Click" Grid.Column="0" Margin="2,2,1,2" Height="30" Padding="10,2">
+                        <Grid Grid.Column="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Name="SelectAllButton" Click="SelectAllButton_Click" Grid.Column="0" Margin="2,2,1,2" Height="30" Padding="10,2">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE835;" FontFamily="Segoe MDL2 Assets" Margin="0,0,5,0"/>
+                                    <TextBlock Text="{DynamicResource SelectAllButton}"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Name="DeleteSelectedButton" Click="DeleteSelectedButton_Click" Grid.Column="1" Margin="1,2,1,2" Height="30" Padding="10,2">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE74D;" FontFamily="Segoe MDL2 Assets" Margin="0,0,5,0"/>
+                                    <TextBlock Text="{DynamicResource DeleteSelectedButton}"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Name="DeleteAllButton" Click="DeleteAllButton_Click" Grid.Column="2" Margin="1,2,1,2" Height="30" Padding="10,2">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE74D;" FontFamily="Segoe MDL2 Assets" Margin="0,0,5,0"/>
+                                    <TextBlock Text="{DynamicResource DeleteAllButton}"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Name="SortButton" Click="SortButton_Click" Grid.Column="3" Margin="1,2,2,2" Height="30" Padding="10,2">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE8C5;" FontFamily="Segoe MDL2 Assets" Margin="0,0,5,0"/>
+                                    <TextBlock Text="{DynamicResource SortButton}"/>
+                                </StackPanel>
+                            </Button>
+                        </Grid>
+                        <Button Name="SettingsButton" Click="SettingsButton_Click" Grid.Column="1" Margin="5,2,2,2" Height="30" Padding="10,2">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="&#xE835;" FontFamily="Segoe MDL2 Assets" Margin="0,0,5,0"/>
-                                <TextBlock Text="{DynamicResource SelectAllButton}"/>
-                            </StackPanel>
-                        </Button>
-                        <Button Name="DeleteSelectedButton" Click="DeleteSelectedButton_Click" Grid.Column="1" Margin="1,2,1,2" Height="30" Padding="10,2">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="&#xE74D;" FontFamily="Segoe MDL2 Assets" Margin="0,0,5,0"/>
-                                <TextBlock Text="{DynamicResource DeleteSelectedButton}"/>
-                            </StackPanel>
-                        </Button>
-                        <Button Name="DeleteAllButton" Click="DeleteAllButton_Click" Grid.Column="2" Margin="1,2,1,2" Height="30" Padding="10,2">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="&#xE74D;" FontFamily="Segoe MDL2 Assets" Margin="0,0,5,0"/>
-                                <TextBlock Text="{DynamicResource DeleteAllButton}"/>
-                            </StackPanel>
-                        </Button>
-                        <Button Name="SortButton" Click="SortButton_Click" Grid.Column="3" Margin="1,2,2,2" Height="30" Padding="10,2">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="&#xE8C5;" FontFamily="Segoe MDL2 Assets" Margin="0,0,5,0"/>
-                                <TextBlock Text="{DynamicResource SortButton}"/>
+                                <TextBlock Text="&#xE713;" FontFamily="Segoe MDL2 Assets" Margin="0,0,5,0"/>
+                                <TextBlock Text="{DynamicResource SettingsButton}"/>
                             </StackPanel>
                         </Button>
                     </Grid>
-                    <Button Name="SettingsButton" Click="SettingsButton_Click" Grid.Column="1" Margin="5,2,2,2" Height="30" Padding="10,2">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="&#xE713;" FontFamily="Segoe MDL2 Assets" Margin="0,0,5,0"/>
-                            <TextBlock Text="{DynamicResource SettingsButton}"/>
-                        </StackPanel>
-                    </Button>
-                </Grid>
-            </StackPanel>
-            <Button Name="AddButton" DockPanel.Dock="Bottom" Height="40" Click="AddButton_Click">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="&#xE710;" FontFamily="Segoe MDL2 Assets" Margin="0,0,5,0"/>
-                    <TextBlock Text="{DynamicResource AddFileButton}"/>
                 </StackPanel>
-            </Button>
-            <ListBox Name="FileListBox" 
-                     SelectionMode="Extended" 
-                     PreviewMouseLeftButtonDown="FileListBox_PreviewMouseLeftButtonDown"
-                     AllowDrop="True"
-                     Drop="FileListBox_Drop"
-                     DragEnter="FileListBox_DragEnter"
-                     Margin="10">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <Image Source="{Binding FileIcon}" Width="16" Height="16" Margin="0,0,5,0"/>
-                            <TextBlock Text="{Binding FileName}" VerticalAlignment="Center"/>
-                            <TextBlock Text="{Binding FileSize, StringFormat=' ({0:N1} KB)'}" 
-                                     Foreground="Gray" 
-                                     VerticalAlignment="Center"
-                                     Margin="5,0,0,0"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-        </DockPanel>
+                <Button Name="AddButton" DockPanel.Dock="Bottom" Height="40" Click="AddButton_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xE710;" FontFamily="Segoe MDL2 Assets" Margin="0,0,5,0"/>
+                        <TextBlock Text="{DynamicResource AddFileButton}"/>
+                    </StackPanel>
+                </Button>
+                <ListBox Name="FileListBox" 
+                         SelectionMode="Extended" 
+                         PreviewMouseLeftButtonDown="FileListBox_PreviewMouseLeftButtonDown"
+                         AllowDrop="True"
+                         Drop="FileListBox_Drop"
+                         DragEnter="FileListBox_DragEnter"
+                         Margin="10">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="200"/>
+                                    <ColumnDefinition Width="80"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Orientation="Horizontal" Grid.Column="0">
+                                    <Image Source="{Binding FileIcon}" Width="16" Height="16" Margin="0,0,5,0"/>
+                                    <TextBlock Text="{Binding FileName}" VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <TextBlock Text="{Binding FileSize, StringFormat='({0:N1} KB)'}" 
+                                           Foreground="Gray" VerticalAlignment="Center" Grid.Column="1"/>
+                                <TextBlock Text="{Binding FilePath}" 
+                                           Foreground="DarkGray" VerticalAlignment="Center" Grid.Column="2"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </DockPanel>
+            <!-- 커스텀 리사이즈 핸들 (Thumb) 추가 -->
+            <Thumb x:Name="ResizeLeft" Width="6" HorizontalAlignment="Left" VerticalAlignment="Stretch" Cursor="SizeWE" Opacity="0" DragDelta="ResizeLeft_DragDelta"/>
+            <Thumb x:Name="ResizeRight" Width="6" HorizontalAlignment="Right" VerticalAlignment="Stretch" Cursor="SizeWE" Opacity="0" DragDelta="ResizeRight_DragDelta"/>
+            <Thumb x:Name="ResizeTop" Height="6" VerticalAlignment="Top" HorizontalAlignment="Stretch" Cursor="SizeNS" Opacity="0" DragDelta="ResizeTop_DragDelta"/>
+            <Thumb x:Name="ResizeBottom" Height="6" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Cursor="SizeNS" Opacity="0" DragDelta="ResizeBottom_DragDelta"/>
+            <!-- 모서리 -->
+            <Thumb x:Name="ResizeTopLeft" Width="12" Height="12" HorizontalAlignment="Left" VerticalAlignment="Top" Cursor="SizeNWSE" Opacity="0" DragDelta="ResizeTopLeft_DragDelta"/>
+            <Thumb x:Name="ResizeTopRight" Width="12" Height="12" HorizontalAlignment="Right" VerticalAlignment="Top" Cursor="SizeNESW" Opacity="0" DragDelta="ResizeTopRight_DragDelta"/>
+            <Thumb x:Name="ResizeBottomLeft" Width="12" Height="12" HorizontalAlignment="Left" VerticalAlignment="Bottom" Cursor="SizeNESW" Opacity="0" DragDelta="ResizeBottomLeft_DragDelta"/>
+            <Thumb x:Name="ResizeBottomRight" Width="12" Height="12" HorizontalAlignment="Right" VerticalAlignment="Bottom" Cursor="SizeNWSE" Opacity="0" DragDelta="ResizeBottomRight_DragDelta"/>
+        </Grid>
     </Border>
 </Window> 
