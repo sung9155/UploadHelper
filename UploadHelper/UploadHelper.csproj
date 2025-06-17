@@ -10,7 +10,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Resource Include="Resources\*.*" />
+    <Resource Include="Resources\*.*">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Themes\*.*">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
   <ItemGroup>
