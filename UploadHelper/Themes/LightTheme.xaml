@@ -5,6 +5,8 @@
     <SolidColorBrush x:Key="ButtonBackgroundBrush" Color="#F0F0F0"/>
     <SolidColorBrush x:Key="ButtonForegroundBrush" Color="#000000"/>
     <SolidColorBrush x:Key="ButtonBorderBrush" Color="#CCCCCC"/>
+    <SolidColorBrush x:Key="ButtonHoverBrush" Color="#E0E0E0"/>
+    <SolidColorBrush x:Key="ButtonPressedBrush" Color="#D0D0D0"/>
     <SolidColorBrush x:Key="ListBoxBackgroundBrush" Color="#FFFFFF"/>
     <SolidColorBrush x:Key="ListBoxForegroundBrush" Color="#000000"/>
     <SolidColorBrush x:Key="ListBoxBorderBrush" Color="#CCCCCC"/>

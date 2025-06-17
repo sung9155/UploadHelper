@@ -76,14 +76,14 @@ namespace UploadHelper
             // 기본 테마 리소스 추가
             var themeResource = new ResourceDictionary
             {
-                Source = new Uri($"Themes/{settings.Theme}Theme.xaml", UriKind.Relative)
+                Source = new Uri($"pack://siteoforigin:,,,/Themes/{settings.Theme}Theme.xaml")
             };
             Application.Current.Resources.MergedDictionaries.Add(themeResource);
 
             // 기본 언어 리소스 추가
             var languageResource = new ResourceDictionary
             {
-                Source = new Uri($"Resources/Strings.{settings.Language}.xaml", UriKind.Relative)
+                Source = new Uri($"pack://siteoforigin:,,,/Resources/Strings.{settings.Language}.xaml")
             };
             Application.Current.Resources.MergedDictionaries.Add(languageResource);
         }
@@ -93,14 +93,14 @@ namespace UploadHelper
             // 테마 적용
             var themeResource = new ResourceDictionary
             {
-                Source = new Uri($"Themes/{newSettings.Theme}Theme.xaml", UriKind.Relative)
+                Source = new Uri($"pack://siteoforigin:,,,/Themes/{newSettings.Theme}Theme.xaml")
             };
             Application.Current.Resources.MergedDictionaries[0] = themeResource;
 
             // 언어 적용
             var languageResource = new ResourceDictionary
             {
-                Source = new Uri($"Resources/Strings.{newSettings.Language}.xaml", UriKind.Relative)
+                Source = new Uri($"pack://siteoforigin:,,,/Resources/Strings.{newSettings.Language}.xaml")
             };
             Application.Current.Resources.MergedDictionaries[1] = languageResource;
 

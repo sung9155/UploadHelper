@@ -14,7 +14,29 @@
             <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}"/>
             <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundBrush}"/>
             <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrush}"/>
-            <Setter Property="FontFamily" Value="Segoe UI Symbol"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="1"
+                                CornerRadius="4">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                            VerticalAlignment="Center"
+                                            Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource ButtonHoverBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource ButtonPressedBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
         <Style TargetType="ListBox">
             <Setter Property="Background" Value="{DynamicResource ListBoxBackgroundBrush}"/>
@@ -59,32 +81,32 @@
                     </Grid.ColumnDefinitions>
                     <Button Name="SelectAllButton" Click="SelectAllButton_Click" Grid.Column="0" Margin="2,2,1,2" Height="30" Padding="10,2">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="☑" Margin="0,0,5,0"/>
+                            <TextBlock Text="&#xE835;" FontFamily="Segoe MDL2 Assets" Margin="0,0,5,0"/>
                             <TextBlock Text="{DynamicResource SelectAllButton}"/>
                         </StackPanel>
                     </Button>
                     <Button Name="DeleteSelectedButton" Click="DeleteSelectedButton_Click" Grid.Column="1" Margin="1,2,1,2" Height="30" Padding="10,2">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="🗑" Margin="0,0,5,0"/>
+                            <TextBlock Text="&#xE74D;" FontFamily="Segoe MDL2 Assets" Margin="0,0,5,0"/>
                             <TextBlock Text="{DynamicResource DeleteSelectedButton}"/>
                         </StackPanel>
                     </Button>
                     <Button Name="DeleteAllButton" Click="DeleteAllButton_Click" Grid.Column="2" Margin="1,2,1,2" Height="30" Padding="10,2">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="🗑" Margin="0,0,5,0"/>
+                            <TextBlock Text="&#xE74D;" FontFamily="Segoe MDL2 Assets" Margin="0,0,5,0"/>
                             <TextBlock Text="{DynamicResource DeleteAllButton}"/>
                         </StackPanel>
                     </Button>
                     <Button Name="SortButton" Click="SortButton_Click" Grid.Column="3" Margin="1,2,2,2" Height="30" Padding="10,2">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="↕" Margin="0,0,5,0"/>
+                            <TextBlock Text="&#xE8C5;" FontFamily="Segoe MDL2 Assets" Margin="0,0,5,0"/>
                             <TextBlock Text="{DynamicResource SortButton}"/>
                         </StackPanel>
                     </Button>
                 </Grid>
                 <Button Name="SettingsButton" Click="SettingsButton_Click" Grid.Column="1" Margin="5,2,2,2" Height="30" Padding="10,2">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="⚙" Margin="0,0,5,0"/>
+                        <TextBlock Text="&#xE713;" FontFamily="Segoe MDL2 Assets" Margin="0,0,5,0"/>
                         <TextBlock Text="{DynamicResource SettingsButton}"/>
                     </StackPanel>
                 </Button>
@@ -92,7 +114,7 @@
         </StackPanel>
         <Button Name="AddButton" DockPanel.Dock="Bottom" Height="40" Click="AddButton_Click">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="📁" Margin="0,0,5,0"/>
+                <TextBlock Text="&#xE710;" FontFamily="Segoe MDL2 Assets" Margin="0,0,5,0"/>
                 <TextBlock Text="{DynamicResource AddFileButton}"/>
             </StackPanel>
         </Button>
