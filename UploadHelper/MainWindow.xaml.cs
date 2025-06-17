@@ -57,6 +57,10 @@ namespace UploadHelper
             settings = Settings.Load();
             InitializeResources();
             ApplySettings(settings);
+
+            // 빌드 날짜를 타이틀에 추가
+            var buildDate = File.GetLastWriteTime(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            Title = $"{Title} (Build: {buildDate:yyyy-MM-dd})";
         }
 
         private void InitializeResources()
