@@ -7,11 +7,37 @@ using System.IO;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Media.Imaging;
+using System.Windows.Interop;
+using System.Runtime.InteropServices;
+using System.Windows.Media;
 
 namespace UploadHelperWpf
 {
     public partial class MainWindow : Window
     {
+        [DllImport("shell32.dll", CharSet = CharSet.Auto)]
+        private static extern IntPtr SHGetFileInfo(string pszPath, uint dwFileAttributes, ref SHFILEINFO psfi, uint cbFileInfo, uint uFlags);
+
+        private const uint SHGFI_ICON = 0x000000100;
+        private const uint SHGFI_SMALLICON = 0x000000001;
+        private const uint SHGFI_USEFILEATTRIBUTES = 0x000000010;
+
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
+        private struct SHFILEINFO
+        {
+            public IntPtr hIcon;
+            public int iIcon;
+            public uint dwAttributes;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
+            public string szDisplayName;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 80)]
+            public string szTypeName;
+        }
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        private static extern bool DestroyIcon(IntPtr handle);
+
         private readonly string tempFolder;
         private bool isDraggingOut = false;
         private ObservableCollection<FileItem> fileItems;
@@ -50,8 +76,25 @@ namespace UploadHelperWpf
             {
                 FileName = Path.GetFileName(filePath),
                 FilePath = filePath,
-                FileSize = fileInfo.Length / 1024.0 // Convert to KB
+                FileSize = fileInfo.Length / 1024.0, // Convert to KB
+                FileIcon = GetFileIcon(filePath)
             });
+        }
+
+        private ImageSource? GetFileIcon(string filePath)
+        {
+            SHFILEINFO shinfo = new SHFILEINFO();
+            IntPtr hImg = SHGetFileInfo(filePath, 0, ref shinfo, (uint)Marshal.SizeOf(shinfo), SHGFI_ICON | SHGFI_SMALLICON);
+            if (shinfo.hIcon != IntPtr.Zero)
+            {
+                var img = Imaging.CreateBitmapSourceFromHIcon(
+                    shinfo.hIcon,
+                    Int32Rect.Empty,
+                    BitmapSizeOptions.FromEmptyOptions());
+                DestroyIcon(shinfo.hIcon);
+                return img;
+            }
+            return null;
         }
 
         private void FileListBox_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -150,6 +193,11 @@ namespace UploadHelperWpf
             isAscending = !isAscending;
         }
 
+        private void SelectAllButton_Click(object sender, RoutedEventArgs e)
+        {
+            FileListBox.SelectAll();
+        }
+
         protected override void OnClosed(EventArgs e)
         {
             base.OnClosed(e);
@@ -173,6 +221,7 @@ namespace UploadHelperWpf
     {
         public required string FileName { get; set; }
         public required string FilePath { get; set; }
-        public double FileSize { get; set; } // Changed to double for decimal KB values
+        public double FileSize { get; set; }
+        public ImageSource? FileIcon { get; set; }
     }
 } 

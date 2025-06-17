@@ -40,20 +40,27 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button Name="DeleteSelectedButton" Click="DeleteSelectedButton_Click" Grid.Column="0" Margin="2,2,1,2" Height="30" Padding="10,2">
+                <Button Name="SelectAllButton" Click="SelectAllButton_Click" Grid.Column="0" Margin="2,2,1,2" Height="30" Padding="10,2">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="☑" Margin="0,0,5,0"/>
+                        <TextBlock Text="전체 선택"/>
+                    </StackPanel>
+                </Button>
+                <Button Name="DeleteSelectedButton" Click="DeleteSelectedButton_Click" Grid.Column="1" Margin="1,2,1,2" Height="30" Padding="10,2">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="🗑" Margin="0,0,5,0"/>
                         <TextBlock Text="선택 삭제"/>
                     </StackPanel>
                 </Button>
-                <Button Name="DeleteAllButton" Click="DeleteAllButton_Click" Grid.Column="1" Margin="1,2,1,2" Height="30" Padding="10,2">
+                <Button Name="DeleteAllButton" Click="DeleteAllButton_Click" Grid.Column="2" Margin="1,2,1,2" Height="30" Padding="10,2">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="🗑" Margin="0,0,5,0"/>
                         <TextBlock Text="전체 삭제"/>
                     </StackPanel>
                 </Button>
-                <Button Name="SortButton" Click="SortButton_Click" Grid.Column="2" Margin="1,2,2,2" Height="30" Padding="10,2">
+                <Button Name="SortButton" Click="SortButton_Click" Grid.Column="3" Margin="1,2,2,2" Height="30" Padding="10,2">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="↕" Margin="0,0,5,0"/>
                         <TextBlock Text="정렬"/>
@@ -77,6 +84,7 @@
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
+                        <Image Source="{Binding FileIcon}" Width="16" Height="16" Margin="0,0,5,0"/>
                         <TextBlock Text="{Binding FileName}" VerticalAlignment="Center"/>
                         <TextBlock Text="{Binding FileSize, StringFormat=' ({0:N1} KB)'}" 
                                  Foreground="Gray" 
