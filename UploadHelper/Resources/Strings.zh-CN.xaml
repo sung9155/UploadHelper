@@ -19,4 +19,8 @@
     <system:String x:Key="EnglishLanguage">英语</system:String>
     <system:String x:Key="JapaneseLanguage">日语</system:String>
     <system:String x:Key="ChineseLanguage">中文</system:String>
+    <system:String x:Key="OpacitySettings">透明度</system:String>
+    <system:String x:Key="OKButton">确定</system:String>
+    <system:String x:Key="LanguageSettings">语言设置</system:String>
+    <system:String x:Key="ThemeSettings">主题设置</system:String>
 </ResourceDictionary> 

@@ -58,9 +58,10 @@ namespace UploadHelper
             InitializeResources();
             ApplySettings(settings);
 
-            // 빌드 날짜를 타이틀에 추가
-            var buildDate = File.GetLastWriteTime(System.Reflection.Assembly.GetExecutingAssembly().Location);
-            Title = $"{Title} (Build: {buildDate:yyyy-MM-dd})";
+            // 버전 정보 추가
+            var appTitle = Application.Current.TryFindResource("AppTitle") as string ?? "UploadHelper";
+            var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "";
+            Title = $"{appTitle} v{version}";
         }
 
         private void InitializeResources()
@@ -111,7 +112,8 @@ namespace UploadHelper
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
-            var settingsWindow = new SettingsWindow(this, settings);
+            var settingsWindow = new SettingsWindow(this);
+            settingsWindow.Owner = this;
             settingsWindow.ShowDialog();
         }
 
@@ -252,13 +254,26 @@ namespace UploadHelper
             {
                 fileItems.Add(item);
             }
-
             isAscending = !isAscending;
         }
 
         private void SelectAllButton_Click(object sender, RoutedEventArgs e)
         {
             FileListBox.SelectAll();
+        }
+
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            DialogResult = false;
+            Close();
+        }
+
+        private void OpacitySlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (e.NewValue >= 0.2 && e.NewValue <= 1.0)
+            {
+                Opacity = e.NewValue;
+            }
         }
 
         protected override void OnClosed(EventArgs e)
@@ -277,6 +292,24 @@ namespace UploadHelper
                 }
             }
             catch { }
+        }
+
+        private void Grid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                DragMove();
+            }
+        }
+
+        private void MinimizeButton_Click(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState.Minimized;
+        }
+
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
         }
     }
 

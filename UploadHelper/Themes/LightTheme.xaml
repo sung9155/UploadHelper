@@ -10,4 +10,5 @@
     <SolidColorBrush x:Key="ListBoxBackgroundBrush" Color="#FFFFFF"/>
     <SolidColorBrush x:Key="ListBoxForegroundBrush" Color="#000000"/>
     <SolidColorBrush x:Key="ListBoxBorderBrush" Color="#CCCCCC"/>
+    <SolidColorBrush x:Key="WindowBorderBrush" Color="#FFCCCCCC"/>
 </ResourceDictionary> 

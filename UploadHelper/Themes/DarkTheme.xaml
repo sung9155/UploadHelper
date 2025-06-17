@@ -14,4 +14,5 @@
     <SolidColorBrush x:Key="ComboBoxBackgroundBrush" Color="#FFFFFF"/>
     <SolidColorBrush x:Key="ComboBoxForegroundBrush" Color="#000000"/>
     <SolidColorBrush x:Key="ComboBoxBorderBrush" Color="#555555"/>
+    <SolidColorBrush x:Key="WindowBorderBrush" Color="#FF444444"/>
 </ResourceDictionary> 

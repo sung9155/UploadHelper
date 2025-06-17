@@ -10,16 +10,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Resource Include="Resources\*.*">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Themes\*.*">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
+    <Resource Include="Themes\*.xaml" />
+    <Resource Include="Resources\*.xaml" />
+    <Resource Include="Resources\app.ico" />
   </ItemGroup>
 
 </Project>

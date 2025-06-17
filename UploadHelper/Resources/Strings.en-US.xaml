@@ -19,4 +19,8 @@
     <system:String x:Key="EnglishLanguage">English</system:String>
     <system:String x:Key="JapaneseLanguage">Japanese</system:String>
     <system:String x:Key="ChineseLanguage">Chinese</system:String>
+    <system:String x:Key="OpacitySettings">Opacity</system:String>
+    <system:String x:Key="OKButton">OK</system:String>
+    <system:String x:Key="LanguageSettings">Language</system:String>
+    <system:String x:Key="ThemeSettings">Theme</system:String>
 </ResourceDictionary> 

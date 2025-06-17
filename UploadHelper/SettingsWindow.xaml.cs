@@ -1,84 +1,125 @@
 using System;
-using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
+using System.Linq;
+using System.IO;
 
 namespace UploadHelper
 {
-    public partial class SettingsWindow : Window, INotifyPropertyChanged
+    public partial class SettingsWindow : Window
     {
-        private readonly Settings settings;
         private readonly MainWindow mainWindow;
+        private double originalOpacity;
+        private string originalTheme;
+        private string originalLanguage;
 
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        public string SelectedLanguage
-        {
-            get => settings.Language;
-            set
-            {
-                if (settings.Language != value)
-                {
-                    settings.Language = value;
-                    OnPropertyChanged(nameof(SelectedLanguage));
-                }
-            }
-        }
-
-        public SettingsWindow(MainWindow mainWindow, Settings currentSettings)
+        public SettingsWindow(MainWindow mainWindow)
         {
             InitializeComponent();
-            settings = currentSettings;
             this.mainWindow = mainWindow;
-            DataContext = this;
+            this.originalOpacity = mainWindow.Opacity;
+            this.originalTheme = App.Current.Properties["Theme"] as string ?? "Light";
+            this.originalLanguage = App.Current.Properties["Language"] as string ?? "ko-KR";
 
-            // 테마 콤보박스 초기화
-            ThemeComboBox.Items.Clear();
-            var lightItem = new ComboBoxItem { Content = "라이트 테마", Tag = "Light" };
-            var darkItem = new ComboBoxItem { Content = "다크 테마", Tag = "Dark" };
-            ThemeComboBox.Items.Add(lightItem);
-            ThemeComboBox.Items.Add(darkItem);
-            ThemeComboBox.SelectedValue = settings.Theme;
-
-            // 언어 콤보박스 아이템 동적 추가
-            LanguageComboBox.Items.Clear();
-            var koItem = new ComboBoxItem { Content = "한국어 (Korean)", Tag = "ko-KR" };
-            var enItem = new ComboBoxItem { Content = "영어 (English)", Tag = "en-US" };
-            var jaItem = new ComboBoxItem { Content = "일본어 (日本語)", Tag = "ja-JP" };
-            var zhItem = new ComboBoxItem { Content = "중국어 (中文)", Tag = "zh-CN" };
-            LanguageComboBox.Items.Add(koItem);
-            LanguageComboBox.Items.Add(enItem);
-            LanguageComboBox.Items.Add(jaItem);
-            LanguageComboBox.Items.Add(zhItem);
-            LanguageComboBox.SelectedValue = settings.Language;
+            // 현재 설정값 로드
+            LoadCurrentSettings();
         }
 
-        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        private void LoadCurrentSettings()
         {
-            // 테마 설정 저장
-            if (ThemeComboBox.SelectedItem is ComboBoxItem selectedTheme && selectedTheme.Tag is string themeValue)
+            // 테마 설정 로드
+            var currentTheme = App.Current.Properties["Theme"] as string ?? "Light";
+            foreach (ComboBoxItem item in ThemeComboBox.Items)
             {
-                settings.Theme = themeValue;
+                if ((item.Tag as string) == currentTheme)
+                {
+                    ThemeComboBox.SelectedItem = item;
+                    break;
+                }
             }
 
-            // 언어 설정 저장
-            if (LanguageComboBox.SelectedItem is ComboBoxItem selectedItem && selectedItem.Tag is string langCode)
+            // 언어 설정 로드
+            var currentLanguage = App.Current.Properties["Language"] as string ?? "ko-KR";
+            foreach (ComboBoxItem item in LanguageComboBox.Items)
             {
-                settings.Language = langCode;
+                if ((item.Tag as string) == currentLanguage)
+                {
+                    LanguageComboBox.SelectedItem = item;
+                    break;
+                }
             }
 
-            // 설정 저장
-            settings.Save();
+            // 투명도 설정 로드
+            OpacitySlider.Value = App.Current.Properties["Opacity"] is double d ? d : 1.0;
+        }
 
-            // 메인 창에 설정 적용
-            mainWindow.ApplySettings(settings);
+        private void ThemeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (ThemeComboBox.SelectedItem is ComboBoxItem selectedItem)
+            {
+                var theme = selectedItem.Tag as string ?? "Light";
+                App.Current.Properties["Theme"] = theme;
+                ApplyTheme(theme);
+                SaveSettings();
+            }
+        }
 
-            // 창 닫기
+        private void LanguageComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (LanguageComboBox.SelectedItem is ComboBoxItem selectedItem)
+            {
+                var language = selectedItem.Tag as string ?? "ko-KR";
+                App.Current.Properties["Language"] = language;
+                ApplyLanguage(language);
+                SaveSettings();
+            }
+        }
+
+        private void OpacitySlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (mainWindow != null)
+            {
+                mainWindow.Opacity = e.NewValue;
+                App.Current.Properties["Opacity"] = e.NewValue;
+                SaveSettings();
+            }
+        }
+
+        private void SaveSettings()
+        {
+            try
+            {
+                var settings = new AppSettings
+                {
+                    Theme = App.Current.Properties["Theme"] as string ?? "Light",
+                    Language = App.Current.Properties["Language"] as string ?? "ko-KR",
+                    Opacity = App.Current.Properties["Opacity"] is double d ? d : 1.0
+                };
+
+                string settingsPath = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                    "UploadHelper",
+                    "settings.json");
+
+                string? directory = Path.GetDirectoryName(settingsPath);
+                if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+                {
+                    Directory.CreateDirectory(directory);
+                }
+
+                var json = System.Text.Json.JsonSerializer.Serialize(settings, new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
+                File.WriteAllText(settingsPath, json);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"설정 파일을 저장하는 중 오류가 발생했습니다: {ex.Message}", "오류",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void OKButton_Click(object sender, RoutedEventArgs e)
+        {
             DialogResult = true;
             Close();
         }
@@ -87,6 +128,80 @@ namespace UploadHelper
         {
             DialogResult = false;
             Close();
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+            if (DialogResult != true)
+            {
+                // 취소된 경우 원래 설정으로 복원
+                mainWindow.Opacity = originalOpacity;
+                App.Current.Properties["Theme"] = originalTheme;
+                App.Current.Properties["Language"] = originalLanguage;
+                ApplyTheme(originalTheme);
+                ApplyLanguage(originalLanguage);
+                SaveSettings();
+            }
+        }
+
+        private void ApplyTheme(string theme)
+        {
+            var resources = Application.Current.Resources;
+            var themeDict = new ResourceDictionary();
+            
+            if (theme == "Dark")
+            {
+                themeDict.Source = new Uri("/Themes/DarkTheme.xaml", UriKind.Relative);
+            }
+            else
+            {
+                themeDict.Source = new Uri("/Themes/LightTheme.xaml", UriKind.Relative);
+            }
+
+            // 기존 테마 리소스 제거
+            var existingThemeDict = resources.MergedDictionaries.FirstOrDefault(d => 
+                d.Source?.ToString().Contains("/Themes/") == true);
+            if (existingThemeDict != null)
+            {
+                resources.MergedDictionaries.Remove(existingThemeDict);
+            }
+
+            // 새 테마 리소스 추가
+            resources.MergedDictionaries.Add(themeDict);
+        }
+
+        private void ApplyLanguage(string language)
+        {
+            var resources = Application.Current.Resources;
+            var langDict = new ResourceDictionary();
+            
+            switch (language)
+            {
+                case "en-US":
+                    langDict.Source = new Uri("/Resources/Strings.en-US.xaml", UriKind.Relative);
+                    break;
+                case "ja-JP":
+                    langDict.Source = new Uri("/Resources/Strings.ja-JP.xaml", UriKind.Relative);
+                    break;
+                case "zh-CN":
+                    langDict.Source = new Uri("/Resources/Strings.zh-CN.xaml", UriKind.Relative);
+                    break;
+                default:
+                    langDict.Source = new Uri("/Resources/Strings.ko-KR.xaml", UriKind.Relative);
+                    break;
+            }
+
+            // 기존 언어 리소스 제거
+            var existingLangDict = resources.MergedDictionaries.FirstOrDefault(d => 
+                d.Source?.ToString().Contains("/Resources/") == true);
+            if (existingLangDict != null)
+            {
+                resources.MergedDictionaries.Remove(existingLangDict);
+            }
+
+            // 새 언어 리소스 추가
+            resources.MergedDictionaries.Add(langDict);
         }
     }
 } 
