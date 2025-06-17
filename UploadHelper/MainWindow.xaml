@@ -1,17 +1,25 @@
-<Window x:Class="UploadHelperWpf.MainWindow"
+<Window x:Class="UploadHelper.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:local="clr-namespace:UploadHelperWpf"
-        Title="파일 업로드 도우미 (WPF)" Height="400" Width="600"
+        xmlns:local="clr-namespace:UploadHelper"
+        Title="{DynamicResource AppTitle}" Height="400" Width="600"
+        Background="{DynamicResource WindowBackgroundBrush}"
+        Foreground="{DynamicResource WindowForegroundBrush}"
         Icon="/Resources/app.ico">
     <Window.Resources>
         <local:EmptyToVisibleConverter x:Key="EmptyToVisibleConverter"/>
         <Style TargetType="Button">
             <Setter Property="Margin" Value="5"/>
             <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrush}"/>
             <Setter Property="FontFamily" Value="Segoe UI Symbol"/>
         </Style>
         <Style TargetType="ListBox">
+            <Setter Property="Background" Value="{DynamicResource ListBoxBackgroundBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource ListBoxForegroundBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource ListBoxBorderBrush}"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ListBox">
@@ -19,10 +27,10 @@
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}">
                             <Grid>
-                                <TextBlock Text="Drag and Drop Here" 
+                                <TextBlock Text="{DynamicResource DragDropText}" 
                                          HorizontalAlignment="Center" 
                                          VerticalAlignment="Center"
-                                         Foreground="Gray"
+                                         Foreground="{DynamicResource TextBlockForegroundBrush}"
                                          Visibility="{Binding Items.Count, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource EmptyToVisibleConverter}}"/>
                                 <ItemsPresenter/>
                             </Grid>
@@ -31,39 +39,53 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource TextBlockForegroundBrush}"/>
+        </Style>
     </Window.Resources>
     <DockPanel>
         <StackPanel DockPanel.Dock="Top" Margin="10">
-            <TextBlock Text="파일을 리스트에 추가하고, 선택 후 브라우저로 드래그하세요." FontSize="15" Margin="0,0,0,10"/>
             <Grid Margin="0,0,0,5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <Button Name="SelectAllButton" Click="SelectAllButton_Click" Grid.Column="0" Margin="2,2,1,2" Height="30" Padding="10,2">
+                <Grid Grid.Column="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Name="SelectAllButton" Click="SelectAllButton_Click" Grid.Column="0" Margin="2,2,1,2" Height="30" Padding="10,2">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="☑" Margin="0,0,5,0"/>
+                            <TextBlock Text="{DynamicResource SelectAllButton}"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Name="DeleteSelectedButton" Click="DeleteSelectedButton_Click" Grid.Column="1" Margin="1,2,1,2" Height="30" Padding="10,2">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="🗑" Margin="0,0,5,0"/>
+                            <TextBlock Text="{DynamicResource DeleteSelectedButton}"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Name="DeleteAllButton" Click="DeleteAllButton_Click" Grid.Column="2" Margin="1,2,1,2" Height="30" Padding="10,2">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="🗑" Margin="0,0,5,0"/>
+                            <TextBlock Text="{DynamicResource DeleteAllButton}"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Name="SortButton" Click="SortButton_Click" Grid.Column="3" Margin="1,2,2,2" Height="30" Padding="10,2">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="↕" Margin="0,0,5,0"/>
+                            <TextBlock Text="{DynamicResource SortButton}"/>
+                        </StackPanel>
+                    </Button>
+                </Grid>
+                <Button Name="SettingsButton" Click="SettingsButton_Click" Grid.Column="1" Margin="5,2,2,2" Height="30" Padding="10,2">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="☑" Margin="0,0,5,0"/>
-                        <TextBlock Text="전체 선택"/>
-                    </StackPanel>
-                </Button>
-                <Button Name="DeleteSelectedButton" Click="DeleteSelectedButton_Click" Grid.Column="1" Margin="1,2,1,2" Height="30" Padding="10,2">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="🗑" Margin="0,0,5,0"/>
-                        <TextBlock Text="선택 삭제"/>
-                    </StackPanel>
-                </Button>
-                <Button Name="DeleteAllButton" Click="DeleteAllButton_Click" Grid.Column="2" Margin="1,2,1,2" Height="30" Padding="10,2">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="🗑" Margin="0,0,5,0"/>
-                        <TextBlock Text="전체 삭제"/>
-                    </StackPanel>
-                </Button>
-                <Button Name="SortButton" Click="SortButton_Click" Grid.Column="3" Margin="1,2,2,2" Height="30" Padding="10,2">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="↕" Margin="0,0,5,0"/>
-                        <TextBlock Text="정렬"/>
+                        <TextBlock Text="⚙" Margin="0,0,5,0"/>
+                        <TextBlock Text="{DynamicResource SettingsButton}"/>
                     </StackPanel>
                 </Button>
             </Grid>
@@ -71,7 +93,7 @@
         <Button Name="AddButton" DockPanel.Dock="Bottom" Height="40" Click="AddButton_Click">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="📁" Margin="0,0,5,0"/>
-                <TextBlock Text="파일 추가"/>
+                <TextBlock Text="{DynamicResource AddFileButton}"/>
             </StackPanel>
         </Button>
         <ListBox Name="FileListBox" 

@@ -1,0 +1,22 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+    <system:String x:Key="AppTitle">ファイルアップロードヘルパー</system:String>
+    <system:String x:Key="DragDropText">ここにファイルをドラッグ＆ドロップしてください</system:String>
+    <system:String x:Key="AddFileButton">ファイル追加</system:String>
+    <system:String x:Key="SelectAllButton">すべて選択</system:String>
+    <system:String x:Key="DeleteSelectedButton">選択削除</system:String>
+    <system:String x:Key="DeleteAllButton">すべて削除</system:String>
+    <system:String x:Key="SortButton">並び替え</system:String>
+    <system:String x:Key="SettingsButton">設定</system:String>
+    <system:String x:Key="ThemeLabel">テーマ：</system:String>
+    <system:String x:Key="LanguageLabel">言語：</system:String>
+    <system:String x:Key="SaveButton">保存</system:String>
+    <system:String x:Key="CancelButton">キャンセル</system:String>
+    <system:String x:Key="LightTheme">ライト</system:String>
+    <system:String x:Key="DarkTheme">ダーク</system:String>
+    <system:String x:Key="KoreanLanguage">韓国語</system:String>
+    <system:String x:Key="EnglishLanguage">英語</system:String>
+    <system:String x:Key="JapaneseLanguage">日本語</system:String>
+    <system:String x:Key="ChineseLanguage">中国語</system:String>
+</ResourceDictionary> 

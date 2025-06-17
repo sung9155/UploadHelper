@@ -11,8 +11,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Interop;
 using System.Runtime.InteropServices;
 using System.Windows.Media;
+using System.Windows.Markup;
 
-namespace UploadHelperWpf
+namespace UploadHelper
 {
     public partial class MainWindow : Window
     {
@@ -42,6 +43,8 @@ namespace UploadHelperWpf
         private bool isDraggingOut = false;
         private ObservableCollection<FileItem> fileItems;
         private bool isAscending = true;
+        private Settings settings;
+        private List<string> fileList = new List<string>();
 
         public MainWindow()
         {
@@ -50,6 +53,62 @@ namespace UploadHelperWpf
             Directory.CreateDirectory(tempFolder);
             fileItems = new ObservableCollection<FileItem>();
             FileListBox.ItemsSource = fileItems;
+
+            settings = Settings.Load();
+            InitializeResources();
+            ApplySettings(settings);
+        }
+
+        private void InitializeResources()
+        {
+            // 언어 코드가 잘못된 경우 강제 변환
+            if (settings.Language == "English" || settings.Language == "Korean")
+            {
+                settings.Language = settings.Language == "Korean" ? "ko-KR" : "en-US";
+                settings.Save();
+            }
+
+            Application.Current.Resources.MergedDictionaries.Clear();
+            // 기본 테마 리소스 추가
+            var themeResource = new ResourceDictionary
+            {
+                Source = new Uri($"Themes/{settings.Theme}Theme.xaml", UriKind.Relative)
+            };
+            Application.Current.Resources.MergedDictionaries.Add(themeResource);
+
+            // 기본 언어 리소스 추가
+            var languageResource = new ResourceDictionary
+            {
+                Source = new Uri($"Resources/Strings.{settings.Language}.xaml", UriKind.Relative)
+            };
+            Application.Current.Resources.MergedDictionaries.Add(languageResource);
+        }
+
+        public void ApplySettings(Settings newSettings)
+        {
+            // 테마 적용
+            var themeResource = new ResourceDictionary
+            {
+                Source = new Uri($"Themes/{newSettings.Theme}Theme.xaml", UriKind.Relative)
+            };
+            Application.Current.Resources.MergedDictionaries[0] = themeResource;
+
+            // 언어 적용
+            var languageResource = new ResourceDictionary
+            {
+                Source = new Uri($"Resources/Strings.{newSettings.Language}.xaml", UriKind.Relative)
+            };
+            Application.Current.Resources.MergedDictionaries[1] = languageResource;
+
+            // 현재 설정 저장
+            settings = newSettings;
+            settings.Save();
+        }
+
+        private void SettingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            var settingsWindow = new SettingsWindow(this, settings);
+            settingsWindow.ShowDialog();
         }
 
         private void AddButton_Click(object sender, RoutedEventArgs e)
