@@ -13,6 +13,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Media;
 using System.Windows.Markup;
 using System.Windows.Controls.Primitives;
+using System.Reflection;
 
 namespace UploadHelper
 {
@@ -59,14 +60,14 @@ namespace UploadHelper
             InitializeResources();
             ApplySettings(settings);
 
-            // 버전 정보 추가
-            var appTitle = Application.Current.TryFindResource("AppTitle") as string ?? "UploadHelper";
-            var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "";
-            Title = $"{appTitle} v{version}";
-            VersionTextBlock.Text = $"v{version}";
-
             // KeyDown 이벤트 등록
             this.KeyDown += MainWindow_KeyDown;
+
+            // 타이틀바에 버전 정보 표시
+            var version = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "";
+            var versionTextBlock = this.FindName("VersionTextBlock") as System.Windows.Controls.TextBlock;
+            if (versionTextBlock != null)
+                versionTextBlock.Text = $"v{version}";
         }
 
         private void InitializeResources()
@@ -387,29 +388,12 @@ namespace UploadHelper
             ResizeBottom_DragDelta(sender, e);
         }
 
-        private void MaximizeRestoreButton_Click(object sender, RoutedEventArgs e)
+        private void MaximizeButton_Click(object sender, RoutedEventArgs e)
         {
             if (WindowState == WindowState.Normal)
-            {
                 WindowState = WindowState.Maximized;
-                if (MaxRestoreIcon != null)
-                    MaxRestoreIcon.Text = "\xE923"; // 복원 아이콘
-            }
             else
-            {
                 WindowState = WindowState.Normal;
-                if (MaxRestoreIcon != null)
-                    MaxRestoreIcon.Text = "\xE922"; // 최대화 아이콘
-            }
-        }
-
-        protected override void OnStateChanged(EventArgs e)
-        {
-            base.OnStateChanged(e);
-            if (MaxRestoreIcon != null)
-            {
-                MaxRestoreIcon.Text = (WindowState == WindowState.Maximized) ? "\xE923" : "\xE922";
-            }
         }
 
         private void PasteButton_Click(object sender, RoutedEventArgs e)
