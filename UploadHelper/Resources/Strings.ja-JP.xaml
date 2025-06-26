@@ -27,4 +27,5 @@
     <system:String x:Key="ClipboardNoFileOrImage">クリップボードにファイルまたは画像がありません。</system:String>
     <system:String x:Key="ClipboardImageSaveError">画像の保存中にエラーが発生しました: {0}</system:String>
     <system:String x:Key="ClipboardFileProcessError">ファイルの処理中にエラーが発生しました: {0}</system:String>
+    <system:String x:Key="RenameButton">名前の変更 (F2)</system:String>
 </ResourceDictionary> 

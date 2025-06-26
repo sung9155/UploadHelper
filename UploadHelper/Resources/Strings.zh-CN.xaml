@@ -27,4 +27,5 @@
     <system:String x:Key="ClipboardNoFileOrImage">剪贴板中没有文件或图片。</system:String>
     <system:String x:Key="ClipboardImageSaveError">保存图片时发生错误: {0}</system:String>
     <system:String x:Key="ClipboardFileProcessError">处理文件时发生错误: {0}</system:String>
+    <system:String x:Key="RenameButton">重命名 (F2)</system:String>
 </ResourceDictionary> 

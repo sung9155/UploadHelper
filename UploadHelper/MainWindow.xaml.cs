@@ -63,6 +63,7 @@ namespace UploadHelper
             var appTitle = Application.Current.TryFindResource("AppTitle") as string ?? "UploadHelper";
             var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "";
             Title = $"{appTitle} v{version}";
+            VersionTextBlock.Text = $"v{version}";
 
             // KeyDown 이벤트 등록
             this.KeyDown += MainWindow_KeyDown;
@@ -174,10 +175,11 @@ namespace UploadHelper
                 try
                 {
                     isDraggingOut = true;
-                    // 임시 폴더 정리 (붙여넣기 이미지 파일은 삭제하지 않음)
+                    // 임시 폴더 정리 (리스트에 없는 파일만 삭제)
+                    var validPaths = fileItems.Select(f => f.FilePath).ToHashSet();
                     foreach (var file in Directory.GetFiles(tempFolder))
                     {
-                        if (!Path.GetFileName(file).StartsWith("Clipboard_"))
+                        if (!validPaths.Contains(file))
                         {
                             try { File.Delete(file); } catch { }
                         }
@@ -187,6 +189,11 @@ namespace UploadHelper
                     List<string> tempFiles = new List<string>();
                     foreach (var item in FileListBox.SelectedItems.Cast<FileItem>())
                     {
+                        if (!File.Exists(item.FilePath))
+                        {
+                            MessageBox.Show("The file does not exist.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            continue;
+                        }
                         string originalFile = item.FilePath;
                         string fileName = Path.GetFileName(originalFile);
                         string tempFile = Path.Combine(tempFolder, fileName);
@@ -198,8 +205,11 @@ namespace UploadHelper
                     }
 
                     // 임시 파일들을 드래그
-                    DataObject data = new DataObject(DataFormats.FileDrop, tempFiles.ToArray());
-                    DragDrop.DoDragDrop(FileListBox, data, DragDropEffects.Copy);
+                    if (tempFiles.Count > 0)
+                    {
+                        DataObject data = new DataObject(DataFormats.FileDrop, tempFiles.ToArray());
+                        DragDrop.DoDragDrop(FileListBox, data, DragDropEffects.Copy);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -377,12 +387,29 @@ namespace UploadHelper
             ResizeBottom_DragDelta(sender, e);
         }
 
-        private void MaximizeButton_Click(object sender, RoutedEventArgs e)
+        private void MaximizeRestoreButton_Click(object sender, RoutedEventArgs e)
         {
             if (WindowState == WindowState.Normal)
+            {
                 WindowState = WindowState.Maximized;
-            else if (WindowState == WindowState.Maximized)
+                if (MaxRestoreIcon != null)
+                    MaxRestoreIcon.Text = "\xE923"; // 복원 아이콘
+            }
+            else
+            {
                 WindowState = WindowState.Normal;
+                if (MaxRestoreIcon != null)
+                    MaxRestoreIcon.Text = "\xE922"; // 최대화 아이콘
+            }
+        }
+
+        protected override void OnStateChanged(EventArgs e)
+        {
+            base.OnStateChanged(e);
+            if (MaxRestoreIcon != null)
+            {
+                MaxRestoreIcon.Text = (WindowState == WindowState.Maximized) ? "\xE923" : "\xE922";
+            }
         }
 
         private void PasteButton_Click(object sender, RoutedEventArgs e)
@@ -442,6 +469,85 @@ namespace UploadHelper
             {
                 PasteButton_Click(sender, e);
             }
+        }
+
+        private void RenameButton_Click(object sender, RoutedEventArgs e)
+        {
+            RenameSelectedFile();
+        }
+
+        protected override void OnPreviewKeyDown(KeyEventArgs e)
+        {
+            base.OnPreviewKeyDown(e);
+            if (e.Key == Key.F2)
+            {
+                RenameSelectedFile();
+                e.Handled = true;
+            }
+        }
+
+        private void RenameSelectedFile()
+        {
+            if (FileListBox.SelectedItems.Count != 1)
+            {
+                MessageBox.Show("Please select a single file to rename.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+            var item = FileListBox.SelectedItem as FileItem;
+            if (item == null) return;
+            string currentName = item.FileName;
+            string input = ShowInputDialog("Enter new file name:", currentName);
+            if (string.IsNullOrWhiteSpace(input) || input == currentName) return;
+            string newFileName = input;
+            string newFilePath = Path.Combine(tempFolder, newFileName);
+            try
+            {
+                if (item.FilePath.StartsWith(tempFolder))
+                {
+                    File.Move(item.FilePath, newFilePath);
+                }
+                else
+                {
+                    File.Copy(item.FilePath, newFilePath, true);
+                }
+                item.FileName = newFileName;
+                item.FilePath = newFilePath;
+                FileListBox.Items.Refresh();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to rename file: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        // 간단한 InputBox 대화상자 구현
+        public static string ShowInputDialog(string text, string defaultValue)
+        {
+            Window inputDialog = new Window()
+            {
+                Width = 400,
+                Height = 150,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                Title = text,
+                ResizeMode = ResizeMode.NoResize,
+                WindowStyle = WindowStyle.ToolWindow
+            };
+            var panel = new StackPanel { Margin = new Thickness(10) };
+            var textBox = new TextBox { Text = defaultValue, Margin = new Thickness(0,10,0,10) };
+            var okButton = new Button { Content = "OK", Width = 80, IsDefault = true, Margin = new Thickness(0,0,10,0) };
+            var cancelButton = new Button { Content = "Cancel", Width = 80, IsCancel = true };
+            var buttonPanel = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right };
+            buttonPanel.Children.Add(okButton);
+            buttonPanel.Children.Add(cancelButton);
+            panel.Children.Add(textBox);
+            panel.Children.Add(buttonPanel);
+            inputDialog.Content = panel;
+            string result = defaultValue;
+            okButton.Click += (s, e) => { result = textBox.Text; inputDialog.DialogResult = true; inputDialog.Close(); };
+            cancelButton.Click += (s, e) => { inputDialog.DialogResult = false; inputDialog.Close(); };
+            if (inputDialog.ShowDialog() == true)
+                return result;
+            return defaultValue;
         }
     }
 

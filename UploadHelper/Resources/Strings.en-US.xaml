@@ -27,4 +27,5 @@
     <system:String x:Key="ClipboardNoFileOrImage">There is no file or image in the clipboard.</system:String>
     <system:String x:Key="ClipboardImageSaveError">An error occurred while saving the image: {0}</system:String>
     <system:String x:Key="ClipboardFileProcessError">An error occurred while processing the file: {0}</system:String>
+    <system:String x:Key="RenameButton">Rename (F2)</system:String>
 </ResourceDictionary> 

@@ -27,4 +27,5 @@
     <system:String x:Key="ClipboardNoFileOrImage">클립보드에 파일이나 이미지가 없습니다.</system:String>
     <system:String x:Key="ClipboardImageSaveError">이미지 저장 중 오류가 발생했습니다: {0}</system:String>
     <system:String x:Key="ClipboardFileProcessError">파일 처리 중 오류가 발생했습니다: {0}</system:String>
+    <system:String x:Key="RenameButton">이름 바꾸기 (F2)</system:String>
 </ResourceDictionary> 
