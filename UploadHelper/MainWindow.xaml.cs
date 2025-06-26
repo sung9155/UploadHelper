@@ -63,6 +63,9 @@ namespace UploadHelper
             var appTitle = Application.Current.TryFindResource("AppTitle") as string ?? "UploadHelper";
             var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "";
             Title = $"{appTitle} v{version}";
+
+            // KeyDown 이벤트 등록
+            this.KeyDown += MainWindow_KeyDown;
         }
 
         private void InitializeResources()
@@ -171,20 +174,26 @@ namespace UploadHelper
                 try
                 {
                     isDraggingOut = true;
-                    // 임시 폴더 정리
+                    // 임시 폴더 정리 (붙여넣기 이미지 파일은 삭제하지 않음)
                     foreach (var file in Directory.GetFiles(tempFolder))
                     {
-                        try { File.Delete(file); } catch { }
+                        if (!Path.GetFileName(file).StartsWith("Clipboard_"))
+                        {
+                            try { File.Delete(file); } catch { }
+                        }
                     }
 
-                    // 선택된 파일들을 임시 폴더에 복사
+                    // 선택된 파일들을 임시 폴더에 복사 (이미 임시폴더에 있으면 복사하지 않음)
                     List<string> tempFiles = new List<string>();
                     foreach (var item in FileListBox.SelectedItems.Cast<FileItem>())
                     {
                         string originalFile = item.FilePath;
                         string fileName = Path.GetFileName(originalFile);
                         string tempFile = Path.Combine(tempFolder, fileName);
-                        File.Copy(originalFile, tempFile, true);
+                        if (!File.Exists(tempFile))
+                        {
+                            File.Copy(originalFile, tempFile, true);
+                        }
                         tempFiles.Add(tempFile);
                     }
 
@@ -194,7 +203,8 @@ namespace UploadHelper
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"파일 처리 중 오류가 발생했습니다: {ex.Message}", "오류", MessageBoxButton.OK, MessageBoxImage.Error);
+                    string msg = string.Format((string)Application.Current.FindResource("ClipboardFileProcessError"), ex.Message);
+                    MessageBox.Show(msg, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
                 finally
                 {
@@ -373,6 +383,65 @@ namespace UploadHelper
                 WindowState = WindowState.Maximized;
             else if (WindowState == WindowState.Maximized)
                 WindowState = WindowState.Normal;
+        }
+
+        private void PasteButton_Click(object sender, RoutedEventArgs e)
+        {
+            // 1. 파일 붙여넣기
+            if (Clipboard.ContainsFileDropList())
+            {
+                var files = Clipboard.GetFileDropList();
+                if (files != null && files.Count > 0)
+                {
+                    foreach (string? file in files)
+                    {
+                        if (!string.IsNullOrEmpty(file) && File.Exists(file))
+                        {
+                            AddFile(file);
+                        }
+                    }
+                }
+                return;
+            }
+
+            // 2. 이미지 붙여넣기
+            if (Clipboard.ContainsImage())
+            {
+                var image = Clipboard.GetImage();
+                if (image != null)
+                {
+                    try
+                    {
+                        Directory.CreateDirectory(tempFolder); // Ensure temp folder exists
+                        string fileName = $"Clipboard_{DateTime.Now:yyyyMMdd_HHmmssfff}.png";
+                        string filePath = Path.Combine(tempFolder, fileName);
+                        using (var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+                        {
+                            var encoder = new PngBitmapEncoder();
+                            encoder.Frames.Add(BitmapFrame.Create(image));
+                            encoder.Save(fileStream);
+                        }
+                        AddFile(filePath);
+                    }
+                    catch (Exception ex)
+                    {
+                        string msg = string.Format((string)Application.Current.FindResource("ClipboardImageSaveError"), ex.Message);
+                        MessageBox.Show(msg, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+                return;
+            }
+
+            // 3. 아무것도 없을 때
+            MessageBox.Show((string)Application.Current.FindResource("ClipboardNoFileOrImage"), "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private void MainWindow_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.V && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+            {
+                PasteButton_Click(sender, e);
+            }
         }
     }
 

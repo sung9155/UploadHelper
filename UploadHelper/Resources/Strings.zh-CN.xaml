@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
     <system:String x:Key="AppTitle">文件上传助手</system:String>
-    <system:String x:Key="DragDropText">将文件拖放到此处</system:String>
+    <system:String x:Key="DragDropText">将文件拖放到此处。也支持Ctrl+V快捷键。</system:String>
     <system:String x:Key="AddFileButton">添加文件</system:String>
     <system:String x:Key="SelectAllButton">全选</system:String>
     <system:String x:Key="DeleteSelectedButton">删除所选</system:String>
@@ -23,4 +23,8 @@
     <system:String x:Key="OKButton">确定</system:String>
     <system:String x:Key="LanguageSettings">语言设置</system:String>
     <system:String x:Key="ThemeSettings">主题设置</system:String>
+    <system:String x:Key="PasteButton">粘贴</system:String>
+    <system:String x:Key="ClipboardNoFileOrImage">剪贴板中没有文件或图片。</system:String>
+    <system:String x:Key="ClipboardImageSaveError">保存图片时发生错误: {0}</system:String>
+    <system:String x:Key="ClipboardFileProcessError">处理文件时发生错误: {0}</system:String>
 </ResourceDictionary> 

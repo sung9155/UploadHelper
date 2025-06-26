@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
     <system:String x:Key="AppTitle">파일 업로드 도우미</system:String>
-    <system:String x:Key="DragDropText">여기에 파일을 끌어다 놓으세요</system:String>
+    <system:String x:Key="DragDropText">여기에 파일을 끌어다 놓으세요. Ctrl+V 단축키도 지원합니다.</system:String>
     <system:String x:Key="AddFileButton">파일 추가</system:String>
     <system:String x:Key="SelectAllButton">전체 선택</system:String>
     <system:String x:Key="DeleteSelectedButton">선택 삭제</system:String>
@@ -23,4 +23,8 @@
     <system:String x:Key="OKButton">확인</system:String>
     <system:String x:Key="LanguageSettings">언어 설정</system:String>
     <system:String x:Key="ThemeSettings">테마 설정</system:String>
+    <system:String x:Key="PasteButton">붙여넣기</system:String>
+    <system:String x:Key="ClipboardNoFileOrImage">클립보드에 파일이나 이미지가 없습니다.</system:String>
+    <system:String x:Key="ClipboardImageSaveError">이미지 저장 중 오류가 발생했습니다: {0}</system:String>
+    <system:String x:Key="ClipboardFileProcessError">파일 처리 중 오류가 발생했습니다: {0}</system:String>
 </ResourceDictionary> 

@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
     <system:String x:Key="AppTitle">File Upload Helper</system:String>
-    <system:String x:Key="DragDropText">Drag and drop files here</system:String>
+    <system:String x:Key="DragDropText">Drag and drop files here. Ctrl+V shortcut is also supported.</system:String>
     <system:String x:Key="AddFileButton">Add File</system:String>
     <system:String x:Key="SelectAllButton">Select All</system:String>
     <system:String x:Key="DeleteSelectedButton">Delete Selected</system:String>
@@ -23,4 +23,8 @@
     <system:String x:Key="OKButton">OK</system:String>
     <system:String x:Key="LanguageSettings">Language</system:String>
     <system:String x:Key="ThemeSettings">Theme</system:String>
+    <system:String x:Key="PasteButton">Paste</system:String>
+    <system:String x:Key="ClipboardNoFileOrImage">There is no file or image in the clipboard.</system:String>
+    <system:String x:Key="ClipboardImageSaveError">An error occurred while saving the image: {0}</system:String>
+    <system:String x:Key="ClipboardFileProcessError">An error occurred while processing the file: {0}</system:String>
 </ResourceDictionary> 
