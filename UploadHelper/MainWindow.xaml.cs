@@ -468,6 +468,11 @@ namespace UploadHelper
                 RenameSelectedFile();
                 e.Handled = true;
             }
+            else if (e.Key == Key.Delete)
+            {
+                DeleteSelectedButton_Click(this, new RoutedEventArgs());
+                e.Handled = true;
+            }
         }
 
         private void RenameSelectedFile()

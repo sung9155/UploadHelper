@@ -5,7 +5,7 @@
     <system:String x:Key="DragDropText">여기에 파일을 끌어다 놓으세요. Ctrl+V 단축키도 지원합니다.</system:String>
     <system:String x:Key="AddFileButton">파일 추가</system:String>
     <system:String x:Key="SelectAllButton">전체 선택</system:String>
-    <system:String x:Key="DeleteSelectedButton">선택 삭제</system:String>
+    <system:String x:Key="DeleteSelectedButton">선택 삭제 (DEL)</system:String>
     <system:String x:Key="DeleteAllButton">전체 삭제</system:String>
     <system:String x:Key="SortButton">정렬</system:String>
     <system:String x:Key="SettingsButton">설정</system:String>

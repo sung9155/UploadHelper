@@ -46,5 +46,3 @@ UploadHelper/
 - `Resources/Strings.ko-KR.xaml` 등에서 각 언어별 UI 문자열 관리
 - `Themes/LightTheme.xaml`, `DarkTheme.xaml`에서 테마 리소스 관리
 
-## 라이선스
-- (라이선스 정보가 필요하다면 여기에 추가)
