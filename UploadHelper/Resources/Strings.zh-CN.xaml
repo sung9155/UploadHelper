@@ -2,15 +2,15 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
     <system:String x:Key="AppTitle">文件上传助手</system:String>
-    <system:String x:Key="DragDropText">将文件拖放到此处。也支持Ctrl+V快捷键。</system:String>
+    <system:String x:Key="DragDropText">在此拖放文件。也支持Ctrl+V快捷键。</system:String>
     <system:String x:Key="AddFileButton">添加文件</system:String>
     <system:String x:Key="SelectAllButton">全选</system:String>
-    <system:String x:Key="DeleteSelectedButton">删除所选</system:String>
+    <system:String x:Key="DeleteSelectedButton">删除选中 (DEL)</system:String>
     <system:String x:Key="DeleteAllButton">全部删除</system:String>
     <system:String x:Key="SortButton">排序</system:String>
     <system:String x:Key="SettingsButton">设置</system:String>
-    <system:String x:Key="ThemeLabel">主题：</system:String>
-    <system:String x:Key="LanguageLabel">语言：</system:String>
+    <system:String x:Key="ThemeLabel">主题:</system:String>
+    <system:String x:Key="LanguageLabel">语言:</system:String>
     <system:String x:Key="SaveButton">保存</system:String>
     <system:String x:Key="CancelButton">取消</system:String>
     <system:String x:Key="LightTheme">浅色</system:String>
@@ -24,8 +24,14 @@
     <system:String x:Key="LanguageSettings">语言设置</system:String>
     <system:String x:Key="ThemeSettings">主题设置</system:String>
     <system:String x:Key="PasteButton">粘贴</system:String>
-    <system:String x:Key="ClipboardNoFileOrImage">剪贴板中没有文件或图片。</system:String>
-    <system:String x:Key="ClipboardImageSaveError">保存图片时发生错误: {0}</system:String>
-    <system:String x:Key="ClipboardFileProcessError">处理文件时发生错误: {0}</system:String>
+    <system:String x:Key="ClipboardNoFileOrImage">剪贴板中没有文件或图像。</system:String>
+    <system:String x:Key="ClipboardImageSaveError">保存图像时出错: {0}</system:String>
+    <system:String x:Key="ClipboardFileProcessError">处理文件时出错: {0}</system:String>
     <system:String x:Key="RenameButton">重命名 (F2)</system:String>
+    <system:String x:Key="SaveAsButton">另存为</system:String>
+    <system:String x:Key="SaveAsDialogTitle">另存为</system:String>
+    <system:String x:Key="SaveAsSelectFileMessage">选择要保存的文件。</system:String>
+    <system:String x:Key="SaveAsSuccessMessage">文件保存成功。</system:String>
+    <system:String x:Key="SaveAsErrorMessage">保存文件时出错: {0}</system:String>
+    <system:String x:Key="SaveAsNoSelectionMessage">请选择要保存的文件。</system:String>
 </ResourceDictionary> 

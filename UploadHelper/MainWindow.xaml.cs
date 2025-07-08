@@ -460,6 +460,11 @@ namespace UploadHelper
             RenameSelectedFile();
         }
 
+        private void SaveAsButton_Click(object sender, RoutedEventArgs e)
+        {
+            SaveSelectedFileAs();
+        }
+
         protected override void OnPreviewKeyDown(KeyEventArgs e)
         {
             base.OnPreviewKeyDown(e);
@@ -506,6 +511,59 @@ namespace UploadHelper
             catch (Exception ex)
             {
                 MessageBox.Show($"Failed to rename file: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void SaveSelectedFileAs()
+        {
+            if (FileListBox.SelectedItems.Count != 1)
+            {
+                string msg = (string)Application.Current.FindResource("SaveAsNoSelectionMessage");
+                MessageBox.Show(msg, "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            var item = FileListBox.SelectedItem as FileItem;
+            if (item == null) return;
+
+            // 원본 파일 경로 확인
+            string sourceFilePath = item.FilePath;
+            if (!File.Exists(sourceFilePath))
+            {
+                MessageBox.Show("The source file does not exist.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            // 파일 확장자 가져오기
+            string extension = Path.GetExtension(sourceFilePath);
+            string defaultFileName = Path.GetFileNameWithoutExtension(sourceFilePath) + "_copy" + extension;
+
+            // SaveFileDialog 생성
+            var saveDialog = new SaveFileDialog
+            {
+                Title = (string)Application.Current.FindResource("SaveAsDialogTitle"),
+                FileName = defaultFileName,
+                Filter = $"All Files (*.*)|*.*|{Path.GetExtension(extension).ToUpper()} Files (*{extension})|*{extension}",
+                FilterIndex = 2,
+                AddExtension = true,
+                OverwritePrompt = true
+            };
+
+            if (saveDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    // 파일 복사
+                    File.Copy(sourceFilePath, saveDialog.FileName, true);
+                    
+                    string successMsg = (string)Application.Current.FindResource("SaveAsSuccessMessage");
+                    MessageBox.Show(successMsg, "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                catch (Exception ex)
+                {
+                    string errorMsg = string.Format((string)Application.Current.FindResource("SaveAsErrorMessage"), ex.Message);
+                    MessageBox.Show(errorMsg, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
         }
 

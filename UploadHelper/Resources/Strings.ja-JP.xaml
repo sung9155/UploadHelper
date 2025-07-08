@@ -2,15 +2,15 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
     <system:String x:Key="AppTitle">ファイルアップロードヘルパー</system:String>
-    <system:String x:Key="DragDropText">ここにファイルをドラッグ＆ドロップしてください。Ctrl+Vショートカットも対応しています。</system:String>
+    <system:String x:Key="DragDropText">ここにファイルをドラッグ＆ドロップしてください。Ctrl+Vショートカットもサポートされています。</system:String>
     <system:String x:Key="AddFileButton">ファイル追加</system:String>
     <system:String x:Key="SelectAllButton">すべて選択</system:String>
-    <system:String x:Key="DeleteSelectedButton">選択削除</system:String>
+    <system:String x:Key="DeleteSelectedButton">選択削除 (DEL)</system:String>
     <system:String x:Key="DeleteAllButton">すべて削除</system:String>
     <system:String x:Key="SortButton">並び替え</system:String>
     <system:String x:Key="SettingsButton">設定</system:String>
-    <system:String x:Key="ThemeLabel">テーマ：</system:String>
-    <system:String x:Key="LanguageLabel">言語：</system:String>
+    <system:String x:Key="ThemeLabel">テーマ:</system:String>
+    <system:String x:Key="LanguageLabel">言語:</system:String>
     <system:String x:Key="SaveButton">保存</system:String>
     <system:String x:Key="CancelButton">キャンセル</system:String>
     <system:String x:Key="LightTheme">ライト</system:String>
@@ -24,8 +24,14 @@
     <system:String x:Key="LanguageSettings">言語設定</system:String>
     <system:String x:Key="ThemeSettings">テーマ設定</system:String>
     <system:String x:Key="PasteButton">貼り付け</system:String>
-    <system:String x:Key="ClipboardNoFileOrImage">クリップボードにファイルまたは画像がありません。</system:String>
-    <system:String x:Key="ClipboardImageSaveError">画像の保存中にエラーが発生しました: {0}</system:String>
-    <system:String x:Key="ClipboardFileProcessError">ファイルの処理中にエラーが発生しました: {0}</system:String>
-    <system:String x:Key="RenameButton">名前の変更 (F2)</system:String>
+    <system:String x:Key="ClipboardNoFileOrImage">クリップボードにファイルや画像がありません。</system:String>
+    <system:String x:Key="ClipboardImageSaveError">画像保存中にエラーが発生しました: {0}</system:String>
+    <system:String x:Key="ClipboardFileProcessError">ファイル処理中にエラーが発生しました: {0}</system:String>
+    <system:String x:Key="RenameButton">名前変更 (F2)</system:String>
+    <system:String x:Key="SaveAsButton">名前を付けて保存</system:String>
+    <system:String x:Key="SaveAsDialogTitle">名前を付けて保存</system:String>
+    <system:String x:Key="SaveAsSelectFileMessage">保存するファイルを選択してください。</system:String>
+    <system:String x:Key="SaveAsSuccessMessage">ファイルが正常に保存されました。</system:String>
+    <system:String x:Key="SaveAsErrorMessage">ファイル保存中にエラーが発生しました: {0}</system:String>
+    <system:String x:Key="SaveAsNoSelectionMessage">保存するファイルを選択してください。</system:String>
 </ResourceDictionary> 

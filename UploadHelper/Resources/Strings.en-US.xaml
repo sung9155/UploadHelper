@@ -5,7 +5,7 @@
     <system:String x:Key="DragDropText">Drag and drop files here. Ctrl+V shortcut is also supported.</system:String>
     <system:String x:Key="AddFileButton">Add File</system:String>
     <system:String x:Key="SelectAllButton">Select All</system:String>
-    <system:String x:Key="DeleteSelectedButton">Delete Selected</system:String>
+    <system:String x:Key="DeleteSelectedButton">Delete Selected (DEL)</system:String>
     <system:String x:Key="DeleteAllButton">Delete All</system:String>
     <system:String x:Key="SortButton">Sort</system:String>
     <system:String x:Key="SettingsButton">Settings</system:String>
@@ -21,11 +21,17 @@
     <system:String x:Key="ChineseLanguage">Chinese</system:String>
     <system:String x:Key="OpacitySettings">Opacity</system:String>
     <system:String x:Key="OKButton">OK</system:String>
-    <system:String x:Key="LanguageSettings">Language</system:String>
-    <system:String x:Key="ThemeSettings">Theme</system:String>
+    <system:String x:Key="LanguageSettings">Language Settings</system:String>
+    <system:String x:Key="ThemeSettings">Theme Settings</system:String>
     <system:String x:Key="PasteButton">Paste</system:String>
-    <system:String x:Key="ClipboardNoFileOrImage">There is no file or image in the clipboard.</system:String>
-    <system:String x:Key="ClipboardImageSaveError">An error occurred while saving the image: {0}</system:String>
-    <system:String x:Key="ClipboardFileProcessError">An error occurred while processing the file: {0}</system:String>
+    <system:String x:Key="ClipboardNoFileOrImage">No file or image in clipboard.</system:String>
+    <system:String x:Key="ClipboardImageSaveError">Error saving image: {0}</system:String>
+    <system:String x:Key="ClipboardFileProcessError">Error processing file: {0}</system:String>
     <system:String x:Key="RenameButton">Rename (F2)</system:String>
+    <system:String x:Key="SaveAsButton">Save As</system:String>
+    <system:String x:Key="SaveAsDialogTitle">Save As</system:String>
+    <system:String x:Key="SaveAsSelectFileMessage">Select a file to save.</system:String>
+    <system:String x:Key="SaveAsSuccessMessage">File saved successfully.</system:String>
+    <system:String x:Key="SaveAsErrorMessage">Error saving file: {0}</system:String>
+    <system:String x:Key="SaveAsNoSelectionMessage">Please select a file to save.</system:String>
 </ResourceDictionary> 
